@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
 import bcrypt from 'bcryptjs';
+import { v4 as uuid } from 'uuid';
 
 @Entity('users')
 class User {
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  id: string;
 
   @Column()
   username: string;
@@ -40,6 +41,12 @@ class User {
   @BeforeUpdate()
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 8);
+  }
+
+  constructor() {
+    if (!this.id) {
+      this.id = uuid();
+    }
   }
 }
 
